@@ -1,0 +1,26 @@
+ID,risk_level,note
+1,High,High overtime and stress indicators detected.
+2,Low,Healthy work-life balance maintained.
+3,Medium,Moderate workload, manageable stress.
+4,High,Very long working hours, no vacations taken.
+5,Low,Well-balanced workload and leave usage.
+6,Medium,Moderate overtime hours, good leave balance.
+7,High,Excessive working hours with minimal time off.
+8,Low,Good work-life balance with adequate rest.
+9,Medium,Slightly elevated workload but manageable.
+10,Low,Excellent work-life balance and leave utilization.
+11,High,High overtime with insufficient recovery time.
+12,Medium,Balanced workload with regular breaks.
+13,High,Critical burnout risk - excessive hours, no vacation.
+14,Low,Healthy working pattern with good leave usage.
+15,High,High stress from overtime and limited time off.
+16,Low,Well-managed workload with excellent leave balance.
+17,Medium,Moderate stress levels, adequate recovery time.
+18,Medium,Balanced approach to work and personal time.
+19,Medium,Steady workload with reasonable time management.
+20,High,High pressure role with limited recovery periods.
+21,High,Extreme workload with critical burnout indicators.
+22,Low,Excellent work-life integration and stress management.
+23,Medium,Moderate workload with good stress management.
+24,Medium,Balanced responsibilities with adequate downtime.
+25,High,High-pressure role with insufficient work-life balance.

@@ -1,0 +1,67 @@
+{
+  "name": "burn_cap",
+  "version": "1.0.0",
+  "description": "A CAP (Cloud Application Programming) project for employee management",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HariharanV04/burn_cap.git"
+  },
+  "license": "MIT",
+  "private": true,
+  "main": "server.js",
+  "keywords": [
+    "cap",
+    "sap",
+    "cloud",
+    "nodejs",
+    "employee-management"
+  ],
+  "author": "Hariharan V <hariharanv040304@gmail.com>",
+  "engines": {
+    "node": ">=20",
+    "npm": ">=8"
+  },
+  "dependencies": {
+    "@cap-js/hana": "^2.1.1",
+    "@sap/cds": "^9.1.0",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.13.0",
+    "@cap-js/sqlite": "^2.0.2"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "dev": "cds watch",
+    "build": "cds build",
+    "deploy": "cds deploy",
+    "test": "jest",
+    "lint": "eslint .",
+    "clean": "rimraf gen dist",
+    "serve": "cds-serve all --in-memory",
+    "watch": "cds watch --open localhost:4004"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": "db/emp.sqlite"
+        }
+      }
+    },
+    "build": {
+      "target": "gen",
+      "tasks": [
+        {
+          "for": "hana",
+          "dest": "gen/db"
+        },
+        {
+          "for": "node-cf",
+          "dest": "gen/srv"
+        }
+      ]
+    }
+  }
+}
