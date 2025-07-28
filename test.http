@@ -168,3 +168,58 @@ GET http://localhost:4004/odata/v4/burnout/BurnoutMetrics?$apply=groupby((risk_l
 # Get Employees with High Overtime and High Risk
 #
 GET http://localhost:4004/odata/v4/burnout/WorkMetrics?$filter=overtime_hours gt 4&$expand=BurnoutMetrics($filter=risk_level eq 'High')
+
+###
+#
+# RAG: Generate AI-Powered Burnout Insights
+#
+POST http://localhost:4004/odata/v4/rag/generateBurnoutInsights
+Content-Type: application/json
+
+{
+  "employeeId": 1
+}
+
+###
+#
+# RAG: Generate Personalized Recommendations
+#
+POST http://localhost:4004/odata/v4/rag/generatePersonalizedRecommendations
+Content-Type: application/json
+
+{
+  "employeeId": 4
+}
+
+###
+#
+# RAG: Predict Burnout Trend
+#
+POST http://localhost:4004/odata/v4/rag/predictBurnoutTrend
+Content-Type: application/json
+
+{
+  "employeeId": 7,
+  "timeframe": "3months"
+}
+
+###
+#
+# RAG: Search Best Practices
+#
+POST http://localhost:4004/odata/v4/rag/searchBestPractices
+Content-Type: application/json
+
+{
+  "query": "reduce overtime stress",
+  "riskLevel": "High"
+}
+
+###
+#
+# Enhanced Burnout Risk Calculation (with RAG notes)
+#
+POST http://localhost:4004/odata/v4/burnout/calculateBurnoutRisk
+Content-Type: application/json
+
+{}
