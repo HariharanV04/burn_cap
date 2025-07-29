@@ -24,7 +24,8 @@
   "dependencies": {
     "@cap-js/hana": "^2.1.1",
     "@sap/cds": "^9.1.0",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.13.0",

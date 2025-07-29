@@ -69,5 +69,18 @@ dist/
 Thumbs.db
 
 # Logs
-logs
+logs/*.log
 *.log
+
+# Environment variables
+.env
+
+# RAG cache and temporary files
+rag-cache/
+*.embedding
+*.vector
+
+# Knowledge base user files (keep structure, ignore user content)
+rag-knowledge-base/**/*.pdf
+rag-knowledge-base/**/*.docx
+rag-knowledge-base/**/user-*
