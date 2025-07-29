@@ -1,0 +1,227 @@
+/* Professional Burnout Monitoring System Styles */
+
+/* Global App Styles */
+.burnoutApp {
+    background-color: #f5f5f5;
+    min-height: 100vh;
+}
+
+/* Header Styles */
+.sapMPageHeader {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sapMTitle {
+    color: #333333;
+    font-weight: 600;
+}
+
+/* Panel Styles */
+.sapMPanel {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+}
+
+.sapMPanelHdr {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 600;
+    color: #333333;
+}
+
+/* Risk Card Styles */
+.riskCard {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.riskCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Button Styles */
+.sapMBtn {
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.sapMBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.sapMBtnEmphasized {
+    background-color: #0070f3;
+    border-color: #0070f3;
+}
+
+.sapMBtnEmphasized:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Table Styles */
+.sapMListTbl {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.sapMListTbl .sapMLIB {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.sapMListTbl .sapMLIB:hover {
+    background-color: #f8f9fa;
+}
+
+.sapMListTblHeader {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Progress Indicator Styles */
+.sapMPI {
+    border-radius: 4px;
+}
+
+.sapMPIBarPos {
+    border-radius: 4px;
+}
+
+/* Object Status Styles */
+.sapMObjectStatus {
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: 500;
+}
+
+.sapMObjectStatusError {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #ffcdd2;
+}
+
+.sapMObjectStatusWarning {
+    background-color: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #ffcc02;
+}
+
+.sapMObjectStatusSuccess {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+/* Toolbar Styles */
+.sapMTB {
+    background-color: #ffffff;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Filter Panel Styles */
+.sapMComboBox {
+    min-width: 150px;
+}
+
+.sapMSearchField {
+    border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sapMPanel {
+        margin: 8px;
+    }
+
+    .sapUiMediumMargin {
+        margin: 8px;
+    }
+
+    .riskCard {
+        width: 100% !important;
+        margin-bottom: 16px;
+    }
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Scrolling and Layout Improvements */
+.sapMPage {
+    height: 100vh;
+}
+
+.sapMPageEnableScrolling .sapMPageScroll {
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Compact welcome panel */
+#welcomePanel .sapMPanelContent {
+    padding: 8px 16px !important;
+}
+
+/* Dashboard view optimization */
+#dashboardView {
+    flex: 1;
+    min-height: 0;
+}
+
+/* Ensure proper scrolling for embedded views */
+.sapUiView {
+    height: auto;
+    min-height: 100%;
+}
+
+/* Risk cards responsive layout */
+@media (max-width: 1200px) {
+    #riskDistributionContainer {
+        flex-direction: column;
+    }
+
+    .riskCard {
+        width: 100% !important;
+        margin-right: 0 !important;
+        margin-bottom: 16px;
+    }
+}
+
+/* Professional color scheme */
+.professional-primary {
+    color: #0070f3;
+}
+
+.professional-secondary {
+    color: #666666;
+}
+
+.professional-success {
+    color: #2e7d32;
+}
+
+.professional-warning {
+    color: #f57c00;
+}
+
+.professional-error {
+    color: #d32f2f;
+}

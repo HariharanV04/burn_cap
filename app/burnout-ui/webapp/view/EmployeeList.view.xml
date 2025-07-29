@@ -1,0 +1,137 @@
+<mvc:View
+    controllerName="burnoutui.controller.EmployeeList"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core">
+    
+    <Page id="employeeListPage" title="Employee Burnout Overview" showNavButton="true" navButtonPress="onNavBack">
+        <content>
+            <VBox id="employeeMainContainer" class="sapUiMediumMargin">
+                
+                <!-- Filter Panel -->
+                <Panel id="filterPanel" headerText="Filters" class="sapUiMediumMarginBottom">
+                    <content>
+                        <HBox id="employeeListFilterContainer" class="sapUiMediumMargin">
+                            <VBox id="employeeListDepartmentFilterContainer" class="sapUiMediumMarginEnd">
+                                <Label id="employeeListDepartmentFilterLabel" text="Department:" class="sapUiTinyMarginBottom"/>
+                                <ComboBox id="departmentFilter" 
+                                    items="{employee>/departments}" 
+                                    selectedKey="{employee>/selectedDepartment}"
+                                    change="onFilterChange">
+                                    <core:Item id="deptFilterItem" key="{employee>key}" text="{employee>text}"/>
+                                </ComboBox>
+                            </VBox>
+                            <VBox id="employeeListRiskFilterContainer" class="sapUiMediumMarginEnd">
+                                <Label id="employeeListRiskFilterLabel" text="Risk Level:" class="sapUiTinyMarginBottom"/>
+                                <ComboBox id="riskFilter" 
+                                    items="{employee>/riskLevels}" 
+                                    selectedKey="{employee>/selectedRiskLevel}"
+                                    change="onFilterChange">
+                                    <core:Item id="riskFilterItem" key="{employee>key}" text="{employee>text}"/>
+                                </ComboBox>
+                            </VBox>
+                            <VBox id="employeeListSearchContainer" class="sapUiMediumMarginEnd">
+                                <Label id="employeeListSearchLabel" text="Search:" class="sapUiTinyMarginBottom"/>
+                                <SearchField id="employeeSearch" 
+                                    value="{employee>/searchQuery}" 
+                                    search="onSearch" 
+                                    width="200px"
+                                    placeholder="Search employees..."/>
+                            </VBox>
+                            <VBox id="actionContainer">
+                                <Label id="actionLabel" text="Actions:" class="sapUiTinyMarginBottom"/>
+                                <Button id="clearFiltersBtn" text="Clear Filters" press="onClearFilters"/>
+                            </VBox>
+                        </HBox>
+                    </content>
+                </Panel>
+
+                <!-- Employee Table -->
+                <Panel id="employeeListTablePanel" headerText="Employees ({employee>/filteredEmployees/length})" class="sapUiMediumMarginBottom">
+                    <content>
+                        <Table id="employeeTable" 
+                            items="{employee>/filteredEmployees}" 
+                            class="sapUiMediumMargin"
+                            mode="SingleSelect"
+                            selectionChange="onEmployeeSelect">
+                            <columns>
+                                <Column id="nameColumn"><Text id="nameHeaderText" text="Name"/></Column>
+                                <Column id="emailColumn"><Text id="emailHeaderText" text="Email"/></Column>
+                                <Column id="deptColumn"><Text id="deptHeaderText" text="Department"/></Column>
+                                <Column id="roleColumn"><Text id="roleHeaderText" text="Role"/></Column>
+                                <Column id="riskColumn"><Text id="riskHeaderText" text="Risk Level"/></Column>
+                                <Column id="workingHoursColumn"><Text id="workingHoursHeaderText" text="Working Hours"/></Column>
+                                <Column id="overtimeColumn"><Text id="overtimeHeaderText" text="Overtime"/></Column>
+                                <Column id="actionsColumn"><Text id="actionsHeaderText" text="Actions"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="employeeItem">
+                                    <Text id="employeeName" text="{employee>name}"/>
+                                    <Text id="employeeEmail" text="{employee>email}"/>
+                                    <Text id="employeeDept" text="{employee>department}"/>
+                                    <Text id="employeeRole" text="{employee>role}"/>
+                                    <ObjectStatus id="employeeRisk" 
+                                        text="{employee>riskLevel}" 
+                                        state="{parts: [{path: 'employee>riskLevel'}], formatter: '.formatRiskState'}"/>
+                                    <Text id="employeeHours" text="{employee>workingHours}"/>
+                                    <Text id="employeeOvertime" text="{employee>overtime}"/>
+                                    <HBox id="employeeActions">
+                                        <Button id="generateRecommendationsBtn" 
+                                            text="Generate Recommendations" 
+                                            type="Default" 
+                                            press="onGenerateRecommendations"/>
+                                        <Button id="viewDetailsBtn" 
+                                            text="View Details" 
+                                            type="Transparent" 
+                                            press="onViewDetails"
+                                            class="sapUiTinyMarginBegin"/>
+                                    </HBox>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </content>
+                </Panel>
+
+                <!-- Selected Employee Details -->
+                <Panel id="employeeDetailsPanel" 
+                    headerText="Employee Details" 
+                    class="sapUiMediumMarginBottom"
+                    visible="{= !!${employee>/selectedEmployee}}">
+                    <content>
+                        <VBox id="employeeDetailsContent" class="sapUiMediumMargin">
+                            <HBox id="selectedEmployeeInfoContainer" class="sapUiMediumMarginBottom">
+                                <VBox id="basicInfoContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="selectedNameLabel" text="Name:" class="sapUiTinyMarginBottom"/>
+                                    <Text id="selectedNameText" text="{employee>/selectedEmployee/name}"/>
+                                    <Label id="selectedEmailLabel" text="Email:" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                                    <Text id="selectedEmailText" text="{employee>/selectedEmployee/email}"/>
+                                </VBox>
+                                <VBox id="workInfoContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="selectedDeptLabel" text="Department:" class="sapUiTinyMarginBottom"/>
+                                    <Text id="selectedDeptText" text="{employee>/selectedEmployee/department}"/>
+                                    <Label id="selectedRoleLabel" text="Role:" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                                    <Text id="selectedRoleText" text="{employee>/selectedEmployee/role}"/>
+                                </VBox>
+                                <VBox id="metricsContainer">
+                                    <Label id="selectedRiskLabel" text="Risk Level:" class="sapUiTinyMarginBottom"/>
+                                    <ObjectStatus id="selectedRiskStatus" 
+                                        text="{employee>/selectedEmployee/riskLevel}" 
+                                        state="{parts: [{path: 'employee>/selectedEmployee/riskLevel'}], formatter: '.formatRiskState'}"/>
+                                    <Label id="selectedHoursLabel" text="Working Hours:" class="sapUiTinyMarginTop sapUiTinyMarginBottom"/>
+                                    <Text id="selectedHoursText" text="{employee>/selectedEmployee/workingHours}"/>
+                                </VBox>
+                            </HBox>
+                            
+                            <Button id="generateDetailedRecommendationsBtn" 
+                                text="Generate Detailed Recommendations" 
+                                type="Emphasized" 
+                                press="onGenerateDetailedRecommendations"/>
+                        </VBox>
+                    </content>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

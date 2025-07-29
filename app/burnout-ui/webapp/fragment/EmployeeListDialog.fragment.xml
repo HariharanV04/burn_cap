@@ -1,0 +1,173 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f">
+    
+    <Dialog id="employeeListDialog" 
+        title="Employee Burnout Management" 
+        contentWidth="90%" 
+        contentHeight="80%" 
+        resizable="true" 
+        draggable="true"
+        afterClose="onCloseEmployeeDialog">
+        
+        <content>
+            <VBox id="employeeDialogMainContainer" class="sapUiSmallMargin">
+                
+                <!-- Filter and Search Panel -->
+                <Panel id="employeeFilterPanel" headerText="Search and Filter Employees" class="sapUiMediumMarginBottom">
+                    <content>
+                        <VBox id="filterMainContainer" class="sapUiMediumMargin">
+                            <!-- First Row: Search and Quick Filters -->
+                            <HBox id="searchFilterRow" class="sapUiMediumMarginBottom" wrap="Wrap">
+                                <VBox id="searchContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="searchLabel" text="Search Employees:" class="sapUiTinyMarginBottom"/>
+                                    <SearchField id="employeeSearchField" 
+                                        width="250px"
+                                        placeholder="Search by name, email, or department..."
+                                        search="onEmployeeSearch"
+                                        liveChange="onEmployeeSearch"/>
+                                </VBox>
+                                <VBox id="departmentFilterContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="departmentFilterLabel" text="Department:" class="sapUiTinyMarginBottom"/>
+                                    <ComboBox id="departmentFilterCombo" 
+                                        width="180px"
+                                        selectedKey="{employeeDialog>/selectedDepartment}"
+                                        selectionChange="onFilterChange">
+                                        <core:Item key="" text="All Departments"/>
+                                        <core:Item key="Engineering" text="Engineering"/>
+                                        <core:Item key="Sales" text="Sales"/>
+                                        <core:Item key="Finance" text="Finance"/>
+                                        <core:Item key="HR" text="HR"/>
+                                        <core:Item key="Marketing" text="Marketing"/>
+                                    </ComboBox>
+                                </VBox>
+                                <VBox id="riskFilterContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="riskFilterLabel" text="Risk Level:" class="sapUiTinyMarginBottom"/>
+                                    <ComboBox id="riskFilterCombo" 
+                                        width="150px"
+                                        selectedKey="{employeeDialog>/selectedRiskLevel}"
+                                        selectionChange="onFilterChange">
+                                        <core:Item key="" text="All Risk Levels"/>
+                                        <core:Item key="High" text="High Risk"/>
+                                        <core:Item key="Medium" text="Medium Risk"/>
+                                        <core:Item key="Low" text="Low Risk"/>
+                                    </ComboBox>
+                                </VBox>
+                                <VBox id="actionButtonsContainer">
+                                    <Label id="actionsLabel" text="Actions:" class="sapUiTinyMarginBottom"/>
+                                    <HBox id="actionButtons">
+                                        <Button id="clearFiltersButton" 
+                                            text="Clear Filters" 
+                                            press="onClearEmployeeFilters"
+                                            class="sapUiTinyMarginEnd"/>
+                                        <Button id="refreshEmployeesButton" 
+                                            text="Refresh" 
+                                            press="onRefreshEmployees"
+                                            icon="sap-icon://refresh"/>
+                                    </HBox>
+                                </VBox>
+                            </HBox>
+                            
+                            <!-- Results Summary -->
+                            <HBox id="resultsSummary" class="sapUiTinyMarginBottom" justifyContent="SpaceBetween">
+                                <Text id="resultsText" text="Showing {employeeDialog>/filteredEmployees/length} of {employeeDialog>/allEmployees/length} employees"/>
+                                <HBox id="bulkActions">
+                                    <Button id="generateBulkRecommendationsBtn" 
+                                        text="Generate Bulk Recommendations" 
+                                        type="Emphasized"
+                                        press="onGenerateBulkRecommendations"
+                                        enabled="{= ${employeeDialog>/selectedEmployees/length} > 0}"/>
+                                </HBox>
+                            </HBox>
+                        </VBox>
+                    </content>
+                </Panel>
+
+                <!-- Employee Table -->
+                <Panel id="employeeTablePanel" headerText="Employee List" class="sapUiMediumMarginBottom">
+                    <content>
+                        <Table id="employeeDialogTable" 
+                            items="{employeeDialog>/filteredEmployees}" 
+                            mode="MultiSelect"
+                            selectionChange="onEmployeeSelectionChange"
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapUiSmallMargin">
+                            
+                            <headerToolbar>
+                                <Toolbar id="employeeTableToolbar">
+                                    <Title id="employeeTableTitle" text="Employees ({employeeDialog>/filteredEmployees/length})"/>
+                                    <ToolbarSpacer id="employeeTableSpacer"/>
+                                    <Button id="exportEmployeesBtn" 
+                                        text="Export" 
+                                        icon="sap-icon://excel-attachment"
+                                        press="onExportEmployees"/>
+                                </Toolbar>
+                            </headerToolbar>
+                            
+                            <columns>
+                                <Column id="employeeNameColumn" width="15%">
+                                    <Text id="employeeNameHeader" text="Name"/>
+                                </Column>
+                                <Column id="employeeEmailColumn" width="20%">
+                                    <Text id="employeeEmailHeader" text="Email"/>
+                                </Column>
+                                <Column id="employeeDeptColumn" width="12%">
+                                    <Text id="employeeDeptHeader" text="Department"/>
+                                </Column>
+                                <Column id="employeeRoleColumn" width="15%">
+                                    <Text id="employeeRoleHeader" text="Role"/>
+                                </Column>
+                                <Column id="employeeRiskColumn" width="10%">
+                                    <Text id="employeeRiskHeader" text="Risk Level"/>
+                                </Column>
+                                <Column id="employeeHoursColumn" width="8%">
+                                    <Text id="employeeHoursHeader" text="Hours/Week"/>
+                                </Column>
+                                <Column id="employeeOvertimeColumn" width="8%">
+                                    <Text id="employeeOvertimeHeader" text="Overtime"/>
+                                </Column>
+                                <Column id="employeeActionsColumn" width="12%">
+                                    <Text id="employeeActionsHeader" text="Actions"/>
+                                </Column>
+                            </columns>
+                            
+                            <items>
+                                <ColumnListItem id="employeeDialogItem" press="onEmployeeItemPress">
+                                    <Text id="employeeDialogName" text="{employeeDialog>name}"/>
+                                    <Text id="employeeDialogEmail" text="{employeeDialog>email}"/>
+                                    <Text id="employeeDialogDept" text="{employeeDialog>department}"/>
+                                    <Text id="employeeDialogRole" text="{employeeDialog>role}"/>
+                                    <ObjectStatus id="employeeDialogRisk" 
+                                        text="{employeeDialog>riskLevel}" 
+                                        state="{parts: [{path: 'employeeDialog>riskLevel'}], formatter: '.formatRiskState'}"/>
+                                    <Text id="employeeDialogHours" text="{employeeDialog>workingHours}"/>
+                                    <Text id="employeeDialogOvertime" text="{employeeDialog>overtime}"/>
+                                    <HBox id="employeeDialogActions">
+                                        <Button id="viewEmployeeDetailsBtn" 
+                                            icon="sap-icon://detail-view" 
+                                            tooltip="View Details"
+                                            press="onViewEmployeeDetails"
+                                            type="Transparent"
+                                            class="sapUiTinyMarginEnd"/>
+                                        <Button id="generateEmployeeRecommendationsBtn" 
+                                            icon="sap-icon://lightbulb" 
+                                            tooltip="Generate Recommendations"
+                                            press="onGenerateEmployeeRecommendations"
+                                            type="Transparent"/>
+                                    </HBox>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </content>
+                </Panel>
+
+            </VBox>
+        </content>
+        
+        <buttons>
+            <Button id="closeEmployeeDialogBtn" text="Close" press="onCloseEmployeeDialog"/>
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

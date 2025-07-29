@@ -1,0 +1,21 @@
+<mvc:View controllerName="burnoutui.controller.Glass"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Page id="page" title="Burnout Monitoring System" enableScrolling="true">
+        <content>
+            <!-- Compact Welcome Header -->
+            <Panel id="welcomePanel" headerText="AI-Powered Employee Wellness Analytics" class="sapUiTinyMarginBottom">
+                <content>
+                    <HBox id="welcomeContent" class="sapUiSmallMargin" justifyContent="SpaceBetween" alignItems="Center">
+                        <Text id="welcomeText" text="Welcome to the Burnout Monitoring System"/>
+                        <Button id="openDashboardBtn" text="Scroll to Dashboard" type="Transparent" press="onOpenDashboard"/>
+                    </HBox>
+                </content>
+            </Panel>
+
+            <!-- Full Dashboard View -->
+            <mvc:XMLView viewName="burnoutui.view.Dashboard" id="dashboardView"/>
+        </content>
+    </Page>
+</mvc:View>

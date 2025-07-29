@@ -40,7 +40,8 @@
     "lint": "eslint .",
     "clean": "rimraf gen dist",
     "serve": "cds-serve all --in-memory",
-    "watch": "cds watch --open localhost:4004"
+    "watch": "cds watch --open localhost:4004",
+    "watch-burnout-ui": "cds watch --open burnout-ui/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "requires": {

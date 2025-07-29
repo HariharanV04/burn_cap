@@ -1,0 +1,1 @@
+using BurnoutService as service from '../../srv/burnout-service';

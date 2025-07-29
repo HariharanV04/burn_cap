@@ -1,0 +1,150 @@
+<mvc:View
+    controllerName="burnoutui.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core">
+    
+    <Page id="dashboardPage" title="Burnout Monitoring Dashboard" enableScrolling="true">
+        <content>
+            <VBox id="dashboardMainContainer" class="sapUiSmallMargin">
+                
+                <!-- Header Section -->
+                <Panel id="systemOverviewPanel" headerText="System Overview" class="sapUiMediumMarginBottom">
+                    <content>
+                        <HBox id="overviewMetricsContainer" class="sapUiMediumMargin">
+                            <VBox id="totalEmployeesContainer" class="sapUiMediumMarginEnd">
+                                <Label id="totalEmployeesLabel" text="Total Employees:" class="sapUiTinyMarginBottom"/>
+                                <ObjectNumber id="totalEmployeesNumber" number="{dashboard>/totalEmployees}" emphasized="true"/>
+                            </VBox>
+                            <VBox id="lastAnalysisContainer" class="sapUiMediumMarginEnd">
+                                <Label id="lastAnalysisLabel" text="Last Analysis:" class="sapUiTinyMarginBottom"/>
+                                <Text id="lastAnalysisText" text="{dashboard>/lastUpdated}"/>
+                            </VBox>
+                            <VBox id="knowledgeBaseContainer">
+                                <Label id="knowledgeBaseLabel" text="Knowledge Base:" class="sapUiTinyMarginBottom"/>
+                                <Text id="knowledgeBaseText" text="{dashboard>/knowledgeBaseStats/totalDocuments} Documents"/>
+                            </VBox>
+                        </HBox>
+                    </content>
+                </Panel>
+
+                <!-- Action Buttons -->
+                <HBox id="dashboardActionButtonsContainer" class="sapUiMediumMarginBottom">
+                    <Button 
+                        id="runAnalysisButton"
+                        text="Run RAG Analysis" 
+                        type="Emphasized" 
+                        press="onRunAnalysis"
+                        enabled="{= !${dashboard>/isAnalyzing}}"
+                        class="sapUiMediumMarginEnd"/>
+                    <Button 
+                        id="viewEmployeesButton"
+                        text="View Employees" 
+                        type="Default" 
+                        press="onViewEmployees"
+                        class="sapUiMediumMarginEnd"/>
+                    <Button 
+                        id="viewKnowledgeBaseButton"
+                        text="Knowledge Base" 
+                        type="Default" 
+                        press="onViewKnowledgeBase"
+                        class="sapUiMediumMarginEnd"/>
+                    <Button 
+                        id="viewAnalyticsButton"
+                        text="Analytics" 
+                        type="Default" 
+                        press="onViewAnalytics"/>
+                </HBox>
+
+                <!-- Risk Distribution Cards -->
+                <HBox id="riskDistributionContainer" class="sapUiMediumMarginBottom">
+                    <Panel id="highRiskCard" headerText="High Risk - {dashboard>/highRiskCount} Employees" class="sapUiMediumMarginEnd riskCard" width="300px">
+                        <content>
+                            <VBox id="highRiskContent" class="sapUiMediumMargin">
+                                <ProgressIndicator 
+                                    id="highRiskProgress"
+                                    percentValue="{parts: [{path: 'dashboard>/highRiskCount'}, {path: 'dashboard>/totalEmployees'}], formatter: '.formatPercentage'}"
+                                    state="Error"
+                                    showValue="true"/>
+                                <Text id="highRiskDescription" text="Immediate intervention required" class="sapUiTinyMarginTop"/>
+                            </VBox>
+                        </content>
+                    </Panel>
+
+                    <Panel id="mediumRiskCard" headerText="Medium Risk - {dashboard>/mediumRiskCount} Employees" class="sapUiMediumMarginEnd riskCard" width="300px">
+                        <content>
+                            <VBox id="mediumRiskContent" class="sapUiMediumMargin">
+                                <ProgressIndicator 
+                                    id="mediumRiskProgress"
+                                    percentValue="{parts: [{path: 'dashboard>/mediumRiskCount'}, {path: 'dashboard>/totalEmployees'}], formatter: '.formatPercentage'}"
+                                    state="Warning"
+                                    showValue="true"/>
+                                <Text id="mediumRiskDescription" text="Monitor and implement preventive measures" class="sapUiTinyMarginTop"/>
+                            </VBox>
+                        </content>
+                    </Panel>
+
+                    <Panel id="lowRiskCard" headerText="Low Risk - {dashboard>/lowRiskCount} Employees" class="riskCard" width="300px">
+                        <content>
+                            <VBox id="lowRiskContent" class="sapUiMediumMargin">
+                                <ProgressIndicator 
+                                    id="lowRiskProgress"
+                                    percentValue="{parts: [{path: 'dashboard>/lowRiskCount'}, {path: 'dashboard>/totalEmployees'}], formatter: '.formatPercentage'}"
+                                    state="Success"
+                                    showValue="true"/>
+                                <Text id="lowRiskDescription" text="Healthy work-life balance maintained" class="sapUiTinyMarginTop"/>
+                            </VBox>
+                        </content>
+                    </Panel>
+                </HBox>
+
+                <!-- Recent Analysis Results -->
+                <Panel id="recentAnalysisPanel" headerText="Recent Analysis Results" class="sapUiMediumMarginBottom" visible="{= !!${dashboard>/recentAnalysis}}">
+                    <content>
+                        <VBox id="recentAnalysisContent" class="sapUiMediumMargin">
+                            <Text id="analysisTimestamp" text="Analysis completed: {dashboard>/recentAnalysis/timestamp}" class="sapUiSmallText sapUiTinyMarginBottom"/>
+                            <Text id="processedEmployeesText" text="Processed {dashboard>/recentAnalysis/processedEmployees} employees" class="sapUiSmallText sapUiTinyMarginBottom"/>
+                            <Text id="analysisMessage" text="{dashboard>/recentAnalysis/message}"/>
+                        </VBox>
+                    </content>
+                </Panel>
+
+                <!-- Department Risk Breakdown -->
+                <Panel id="departmentRiskPanel" headerText="Department Risk Analysis" class="sapUiMediumMarginBottom">
+                    <content>
+                        <Table id="departmentRiskTable" items="{dashboard>/departmentRisks}" class="sapUiMediumMargin">
+                            <columns>
+                                <Column id="dashboardDeptColumn"><Text id="dashboardDeptHeaderText" text="Department"/></Column>
+                                <Column id="dashboardTotalColumn"><Text id="dashboardTotalHeaderText" text="Total"/></Column>
+                                <Column id="dashboardHighRiskColumn"><Text id="dashboardHighRiskColumnHeader" text="High Risk"/></Column>
+                                <Column id="dashboardMediumRiskColumn"><Text id="dashboardMediumRiskColumnHeader" text="Medium Risk"/></Column>
+                                <Column id="dashboardLowRiskColumn"><Text id="dashboardLowRiskColumnHeader" text="Low Risk"/></Column>
+                                <Column id="dashboardRiskPercentColumn"><Text id="dashboardRiskPercentHeaderText" text="Risk %"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="dashboardDeptRiskItem">
+                                    <Text id="dashboardDeptName" text="{dashboard>department}"/>
+                                    <Text id="dashboardDeptTotal" text="{dashboard>total}"/>
+                                    <ObjectStatus id="dashboardDeptHighRisk" text="{dashboard>high}" state="Error"/>
+                                    <ObjectStatus id="dashboardDeptMediumRisk" text="{dashboard>medium}" state="Warning"/>
+                                    <ObjectStatus id="dashboardDeptLowRisk" text="{dashboard>low}" state="Success"/>
+                                    <ProgressIndicator id="dashboardDeptRiskProgress" percentValue="{dashboard>riskPercentage}" showValue="true"/>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </content>
+                </Panel>
+
+            </VBox>
+        </content>
+        
+        <footer>
+            <Toolbar id="dashboardFooter">
+                <ToolbarSpacer id="footerSpacerLeft"/>
+                <Text id="footerText" text="Powered by RAG AI | Last updated: {dashboard>/lastUpdated}"/>
+                <ToolbarSpacer id="footerSpacerRight"/>
+            </Toolbar>
+        </footer>
+    </Page>
+</mvc:View>

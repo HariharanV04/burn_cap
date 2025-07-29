@@ -1,0 +1,163 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f">
+    
+    <Dialog id="employeeDetailsDialog" 
+        title="Employee Details - {employeeDetails>/selectedEmployee/name}" 
+        contentWidth="70%" 
+        contentHeight="70%" 
+        resizable="true" 
+        draggable="true">
+        
+        <content>
+            <VBox id="employeeDetailsMainContainer" class="sapUiMediumMargin">
+                
+                <!-- Employee Information Panel -->
+                <Panel id="employeeInfoPanel" headerText="Employee Information" class="sapUiMediumMarginBottom">
+                    <content>
+                        <HBox id="employeeInfoContent" class="sapUiMediumMargin">
+                            <VBox id="basicInfoSection" class="sapUiMediumMarginEnd" width="33%">
+                                <Label id="empNameLabel" text="Name:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empNameText" text="{employeeDetails>/selectedEmployee/name}" class="sapUiMediumMarginBottom"/>
+                                
+                                <Label id="empEmailLabel" text="Email:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empEmailText" text="{employeeDetails>/selectedEmployee/email}" class="sapUiMediumMarginBottom"/>
+                                
+                                <Label id="empIdLabel" text="Employee ID:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empIdText" text="{employeeDetails>/selectedEmployee/id}"/>
+                            </VBox>
+                            
+                            <VBox id="workInfoSection" class="sapUiMediumMarginEnd" width="33%">
+                                <Label id="empDeptLabel" text="Department:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empDeptText" text="{employeeDetails>/selectedEmployee/department}" class="sapUiMediumMarginBottom"/>
+                                
+                                <Label id="empRoleLabel" text="Role:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empRoleText" text="{employeeDetails>/selectedEmployee/role}" class="sapUiMediumMarginBottom"/>
+                                
+                                <Label id="empManagerLabel" text="Manager:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empManagerText" text="{employeeDetails>/selectedEmployee/manager}"/>
+                            </VBox>
+                            
+                            <VBox id="metricsSection" width="34%">
+                                <Label id="empRiskLabel" text="Risk Level:" class="sapUiTinyMarginBottom"/>
+                                <ObjectStatus id="empRiskStatus" 
+                                    text="{employeeDetails>/selectedEmployee/riskLevel}" 
+                                    state="{parts: [{path: 'employeeDetails>/selectedEmployee/riskLevel'}], formatter: '.formatRiskState'}"
+                                    class="sapUiMediumMarginBottom"/>
+                                
+                                <Label id="empHoursLabel" text="Working Hours/Week:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empHoursText" text="{employeeDetails>/selectedEmployee/workingHours}" class="sapUiMediumMarginBottom"/>
+                                
+                                <Label id="empOvertimeLabel" text="Overtime Hours:" class="sapUiTinyMarginBottom"/>
+                                <Text id="empOvertimeText" text="{employeeDetails>/selectedEmployee/overtime}"/>
+                            </VBox>
+                        </HBox>
+                    </content>
+                </Panel>
+
+                <!-- Work Metrics Panel -->
+                <Panel id="workMetricsPanel" headerText="Work Metrics & Analytics" class="sapUiMediumMarginBottom">
+                    <content>
+                        <VBox id="workMetricsContent" class="sapUiMediumMargin">
+                            <HBox id="metricsRow1" class="sapUiMediumMarginBottom">
+                                <VBox id="productivitySection" class="sapUiMediumMarginEnd" width="25%">
+                                    <Label id="productivityLabel" text="Productivity Score:" class="sapUiTinyMarginBottom"/>
+                                    <ProgressIndicator id="productivityIndicator" 
+                                        percentValue="{employeeDetails>/selectedEmployee/productivityScore}" 
+                                        showValue="true"
+                                        state="Success"/>
+                                </VBox>
+                                <VBox id="stressSection" class="sapUiMediumMarginEnd" width="25%">
+                                    <Label id="stressLabel" text="Stress Level:" class="sapUiTinyMarginBottom"/>
+                                    <ProgressIndicator id="stressIndicator" 
+                                        percentValue="{employeeDetails>/selectedEmployee/stressLevel}" 
+                                        showValue="true"
+                                        state="Warning"/>
+                                </VBox>
+                                <VBox id="engagementSection" class="sapUiMediumMarginEnd" width="25%">
+                                    <Label id="engagementLabel" text="Engagement Score:" class="sapUiTinyMarginBottom"/>
+                                    <ProgressIndicator id="engagementIndicator" 
+                                        percentValue="{employeeDetails>/selectedEmployee/engagementScore}" 
+                                        showValue="true"
+                                        state="Success"/>
+                                </VBox>
+                                <VBox id="workloadSection" width="25%">
+                                    <Label id="workloadLabel" text="Workload Index:" class="sapUiTinyMarginBottom"/>
+                                    <ProgressIndicator id="workloadIndicator" 
+                                        percentValue="{employeeDetails>/selectedEmployee/workloadIndex}" 
+                                        showValue="true"
+                                        state="Error"/>
+                                </VBox>
+                            </HBox>
+                            
+                            <HBox id="metricsRow2">
+                                <VBox id="leaveSection" class="sapUiMediumMarginEnd" width="33%">
+                                    <Label id="leaveLabel" text="Leave Taken (Days):" class="sapUiTinyMarginBottom"/>
+                                    <Text id="leaveText" text="{employeeDetails>/selectedEmployee/leaveTaken}"/>
+                                </VBox>
+                                <VBox id="lastCheckSection" class="sapUiMediumMarginEnd" width="33%">
+                                    <Label id="lastCheckLabel" text="Last Check-in:" class="sapUiTinyMarginBottom"/>
+                                    <Text id="lastCheckText" text="{employeeDetails>/selectedEmployee/lastCheckin}"/>
+                                </VBox>
+                                <VBox id="joinDateSection" width="34%">
+                                    <Label id="joinDateLabel" text="Join Date:" class="sapUiTinyMarginBottom"/>
+                                    <Text id="joinDateText" text="{employeeDetails>/selectedEmployee/joinDate}"/>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </content>
+                </Panel>
+
+                <!-- AI Recommendations Panel -->
+                <Panel id="recommendationsPanel" headerText="AI-Generated Recommendations" class="sapUiMediumMarginBottom">
+                    <content>
+                        <VBox id="recommendationsContent" class="sapUiMediumMargin">
+                            <HBox id="recommendationsHeader" class="sapUiMediumMarginBottom" justifyContent="SpaceBetween">
+                                <Text id="recommendationsTitle" text="Personalized recommendations based on RAG analysis"/>
+                                <Button id="generateNewRecommendationsBtn" 
+                                    text="Generate New Recommendations" 
+                                    type="Emphasized"
+                                    press="onGenerateNewRecommendations"/>
+                            </HBox>
+                            
+                            <VBox id="recommendationsList" items="{employeeDetails>/selectedEmployee/recommendations}">
+                                <HBox id="recommendationItem" class="sapUiTinyMarginBottom">
+                                    <Icon id="recommendationIcon" src="sap-icon://lightbulb" class="sapUiTinyMarginEnd"/>
+                                    <Text id="recommendationText" text="{employeeDetails>text}" wrapping="true"/>
+                                </HBox>
+                            </VBox>
+                            
+                            <Text id="noRecommendationsText" 
+                                text="No recommendations available. Click 'Generate New Recommendations' to create personalized suggestions."
+                                visible="{= !${employeeDetails>/selectedEmployee/recommendations} || ${employeeDetails>/selectedEmployee/recommendations/length} === 0}"/>
+                        </VBox>
+                    </content>
+                </Panel>
+
+                <!-- Action Buttons -->
+                <HBox id="employeeDetailsActions" justifyContent="End">
+                    <Button id="scheduleCheckinBtn" 
+                        text="Schedule Check-in" 
+                        type="Default"
+                        press="onScheduleCheckin"
+                        class="sapUiMediumMarginEnd"/>
+                    <Button id="sendRecommendationsBtn" 
+                        text="Send Recommendations" 
+                        type="Emphasized"
+                        press="onSendRecommendations"
+                        class="sapUiMediumMarginEnd"/>
+                    <Button id="exportEmployeeReportBtn" 
+                        text="Export Report" 
+                        type="Default"
+                        press="onExportEmployeeReport"/>
+                </HBox>
+
+            </VBox>
+        </content>
+        
+        <buttons>
+            <Button id="closeEmployeeDetailsBtn" text="Close" press="onCloseEmployeeDetails"/>
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>
