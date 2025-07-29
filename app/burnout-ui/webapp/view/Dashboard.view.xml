@@ -136,6 +136,185 @@
                     </content>
                 </Panel>
 
+                <!-- Knowledge Base Section -->
+                <Panel id="knowledgeBasePanel" headerText="AI Knowledge Base" class="sapUiMediumMarginBottom" visible="{dashboard>/showKnowledgeBase}">
+                    <content>
+                        <VBox id="knowledgeBaseContent" class="sapUiMediumMargin">
+
+                            <!-- Knowledge Base Header -->
+                            <HBox id="knowledgeBaseHeader" class="sapUiMediumMarginBottom" justifyContent="SpaceBetween" alignItems="Center">
+                                <VBox id="kbHeaderInfo">
+                                    <Text id="kbTitle" text="RAG-Enhanced Knowledge Repository" class="sapUiMediumText"/>
+                                    <Text id="kbSubtitle" text="AI-powered insights and recommendations for burnout prevention" class="sapUiSmallText"/>
+                                </VBox>
+                                <HBox id="kbHeaderActions">
+                                    <Button id="addKnowledgeBtn"
+                                        text="Add Knowledge"
+                                        icon="sap-icon://add-document"
+                                        type="Default"
+                                        press="onAddKnowledge"
+                                        class="sapUiTinyMarginEnd"/>
+                                    <Button id="searchKnowledgeBtn"
+                                        text="Search"
+                                        icon="sap-icon://search"
+                                        type="Default"
+                                        press="onSearchKnowledge"
+                                        class="sapUiTinyMarginEnd"/>
+                                    <Button id="refreshKnowledgeBtn"
+                                        text="Refresh"
+                                        icon="sap-icon://refresh"
+                                        type="Transparent"
+                                        press="onRefreshKnowledge"/>
+                                </HBox>
+                            </HBox>
+
+                            <!-- Knowledge Base Statistics -->
+                            <HBox id="kbStatsContainer" class="sapUiMediumMarginBottom">
+                                <VBox id="totalDocsContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="totalDocsLabel" text="Total Documents:" class="sapUiTinyMarginBottom"/>
+                                    <ObjectNumber id="totalDocsNumber" number="{dashboard>/knowledgeBaseStats/totalDocuments}" emphasized="true"/>
+                                </VBox>
+                                <VBox id="categoriesContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="categoriesLabel" text="Categories:" class="sapUiTinyMarginBottom"/>
+                                    <Text id="categoriesText" text="{dashboard>/knowledgeBaseStats/categoriesCount}"/>
+                                </VBox>
+                                <VBox id="lastUpdatedContainer" class="sapUiMediumMarginEnd">
+                                    <Label id="lastUpdatedLabel" text="Last Updated:" class="sapUiTinyMarginBottom"/>
+                                    <Text id="lastUpdatedText" text="{dashboard>/knowledgeBaseStats/lastUpdated}"/>
+                                </VBox>
+                                <VBox id="aiStatusContainer">
+                                    <Label id="aiStatusLabel" text="AI Status:" class="sapUiTinyMarginBottom"/>
+                                    <ObjectStatus id="aiStatusIndicator"
+                                        text="{dashboard>/knowledgeBaseStats/aiStatus}"
+                                        state="Success"/>
+                                </VBox>
+                            </HBox>
+
+                            <!-- Knowledge Categories -->
+                            <HBox id="kbCategoriesContainer" class="sapUiMediumMarginBottom" wrap="Wrap">
+                                <Panel id="bestPracticesPanel" headerText="Best Practices ({dashboard>/knowledgeBaseStats/categories/best-practices})" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" width="300px">
+                                    <content>
+                                        <VBox id="bestPracticesContent" class="sapUiSmallMargin">
+                                            <Text id="bestPracticesDesc" text="Evidence-based strategies for preventing burnout" class="sapUiSmallText sapUiTinyMarginBottom"/>
+                                            <Button id="viewBestPracticesBtn"
+                                                text="View Documents"
+                                                type="Transparent"
+                                                press="onViewKnowledgeCategory">
+                                                <customData>
+                                                    <core:CustomData key="category" value="best-practices"/>
+                                                </customData>
+                                            </Button>
+                                        </VBox>
+                                    </content>
+                                </Panel>
+
+                                <Panel id="caseStudiesPanel" headerText="Case Studies ({dashboard>/knowledgeBaseStats/categories/case-studies})" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" width="300px">
+                                    <content>
+                                        <VBox id="caseStudiesContent" class="sapUiSmallMargin">
+                                            <Text id="caseStudiesDesc" text="Real-world examples and success stories" class="sapUiSmallText sapUiTinyMarginBottom"/>
+                                            <Button id="viewCaseStudiesBtn"
+                                                text="View Documents"
+                                                type="Transparent"
+                                                press="onViewKnowledgeCategory">
+                                                <customData>
+                                                    <core:CustomData key="category" value="case-studies"/>
+                                                </customData>
+                                            </Button>
+                                        </VBox>
+                                    </content>
+                                </Panel>
+
+                                <Panel id="healthGuidelinesPanel" headerText="Health Guidelines ({dashboard>/knowledgeBaseStats/categories/health-guidelines})" class="sapUiTinyMarginBottom" width="300px">
+                                    <content>
+                                        <VBox id="healthGuidelinesContent" class="sapUiSmallMargin">
+                                            <Text id="healthGuidelinesDesc" text="Medical and wellness recommendations" class="sapUiSmallText sapUiTinyMarginBottom"/>
+                                            <Button id="viewHealthGuidelinesBtn"
+                                                text="View Documents"
+                                                type="Transparent"
+                                                press="onViewKnowledgeCategory">
+                                                <customData>
+                                                    <core:CustomData key="category" value="health-guidelines"/>
+                                                </customData>
+                                            </Button>
+                                        </VBox>
+                                    </content>
+                                </Panel>
+                            </HBox>
+
+                            <!-- Recent Knowledge Items -->
+                            <Panel id="recentKnowledgePanel" headerText="Recent Knowledge Items" class="sapUiMediumMarginBottom">
+                                <content>
+                                    <Table id="recentKnowledgeTable" items="{dashboard>/recentKnowledgeItems}" class="sapUiSmallMargin">
+                                        <columns>
+                                            <Column id="kbTitleColumn"><Text id="kbTitleHeader" text="Title"/></Column>
+                                            <Column id="kbCategoryColumn"><Text id="kbCategoryHeader" text="Category"/></Column>
+                                            <Column id="kbDateColumn"><Text id="kbDateHeader" text="Date Added"/></Column>
+                                            <Column id="kbRelevanceColumn"><Text id="kbRelevanceHeader" text="AI Relevance"/></Column>
+                                            <Column id="kbActionsColumn"><Text id="kbActionsHeader" text="Actions"/></Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem id="knowledgeItem" press="onKnowledgeItemPress">
+                                                <Text id="knowledgeItemTitle" text="{dashboard>title}"/>
+                                                <ObjectStatus id="knowledgeItemCategory"
+                                                    text="{dashboard>category}"
+                                                    state="{parts: [{path: 'dashboard>category'}], formatter: '.formatCategoryState'}"/>
+                                                <Text id="knowledgeItemDate" text="{dashboard>dateAdded}"/>
+                                                <ProgressIndicator id="knowledgeItemRelevance"
+                                                    percentValue="{dashboard>relevanceScore}"
+                                                    showValue="true"
+                                                    state="Success"/>
+                                                <HBox id="knowledgeItemActions">
+                                                    <Button id="viewKnowledgeItemBtn"
+                                                        icon="sap-icon://detail-view"
+                                                        tooltip="View Details"
+                                                        press="onViewKnowledgeItem"
+                                                        type="Transparent"
+                                                        class="sapUiTinyMarginEnd"/>
+                                                    <Button id="editKnowledgeItemBtn"
+                                                        icon="sap-icon://edit"
+                                                        tooltip="Edit"
+                                                        press="onEditKnowledgeItem"
+                                                        type="Transparent"/>
+                                                </HBox>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </content>
+                            </Panel>
+
+                            <!-- AI Insights Panel -->
+                            <Panel id="aiInsightsPanel" headerText="AI-Generated Insights" class="sapUiMediumMarginBottom">
+                                <content>
+                                    <VBox id="aiInsightsContent" class="sapUiMediumMargin">
+                                        <HBox id="aiInsightsHeader" class="sapUiMediumMarginBottom" justifyContent="SpaceBetween">
+                                            <Text id="aiInsightsTitle" text="Latest AI analysis of knowledge base patterns"/>
+                                            <Button id="generateInsightsBtn"
+                                                text="Generate New Insights"
+                                                type="Emphasized"
+                                                press="onGenerateAIInsights"/>
+                                        </HBox>
+
+                                        <VBox id="insightsList" items="{dashboard>/aiInsights}">
+                                            <HBox id="insightItem" class="sapUiTinyMarginBottom">
+                                                <core:Icon id="insightIcon" src="sap-icon://lightbulb" class="sapUiTinyMarginEnd" color="#0070f3"/>
+                                                <VBox id="insightContent">
+                                                    <Text id="insightText" text="{dashboard>insight}" wrapping="true" class="sapUiMediumText"/>
+                                                    <Text id="insightConfidence" text="Confidence: {dashboard>confidence}%" class="sapUiSmallText"/>
+                                                </VBox>
+                                            </HBox>
+                                        </VBox>
+
+                                        <Text id="noInsightsText"
+                                            text="No AI insights available. Click 'Generate New Insights' to analyze the knowledge base."
+                                            visible="{= !${dashboard>/aiInsights} || ${dashboard>/aiInsights/length} === 0}"/>
+                                    </VBox>
+                                </content>
+                            </Panel>
+
+                        </VBox>
+                    </content>
+                </Panel>
+
             </VBox>
         </content>
         

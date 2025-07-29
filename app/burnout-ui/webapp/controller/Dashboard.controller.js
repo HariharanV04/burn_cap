@@ -78,13 +78,21 @@ sap.ui.define([
             oDashboardModel.setProperty("/lowRiskCount", 15);
             oDashboardModel.setProperty("/lastUpdated", new Date().toLocaleString());
             oDashboardModel.setProperty("/knowledgeBaseStats", {
-                totalDocuments: 3,
+                totalDocuments: 15,
+                categoriesCount: 3,
+                lastUpdated: new Date().toLocaleDateString(),
+                aiStatus: "Active",
                 categories: {
-                    'best-practices': 1,
-                    'case-studies': 1,
-                    'health-guidelines': 1
+                    'best-practices': 6,
+                    'case-studies': 5,
+                    'health-guidelines': 4
                 }
             });
+
+            // Initialize knowledge base properties
+            oDashboardModel.setProperty("/showKnowledgeBase", false);
+            oDashboardModel.setProperty("/recentKnowledgeItems", []);
+            oDashboardModel.setProperty("/aiInsights", []);
             
             // Mock department data
             var aDepartmentRisks = [
@@ -408,7 +416,110 @@ sap.ui.define([
         },
 
         onViewKnowledgeBase: function () {
-            MessageToast.show("Knowledge base view - Coming soon!");
+            var oDashboardModel = this.getView().getModel("dashboard");
+            var bCurrentlyVisible = oDashboardModel.getProperty("/showKnowledgeBase");
+
+            // Toggle knowledge base visibility
+            oDashboardModel.setProperty("/showKnowledgeBase", !bCurrentlyVisible);
+
+            if (!bCurrentlyVisible) {
+                MessageToast.show("Loading Knowledge Base...");
+                this._loadKnowledgeBaseData();
+
+                // Scroll to knowledge base section
+                setTimeout(function() {
+                    var oKnowledgePanel = this.byId("knowledgeBasePanel");
+                    if (oKnowledgePanel && oKnowledgePanel.getDomRef()) {
+                        oKnowledgePanel.getDomRef().scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }.bind(this), 300);
+            } else {
+                MessageToast.show("Knowledge Base hidden");
+            }
+        },
+
+        _loadKnowledgeBaseData: function () {
+            var oDashboardModel = this.getView().getModel("dashboard");
+
+            // Enhanced knowledge base statistics
+            var oKnowledgeStats = {
+                totalDocuments: 15,
+                categoriesCount: 3,
+                lastUpdated: new Date().toLocaleDateString(),
+                aiStatus: "Active",
+                categories: {
+                    'best-practices': 6,
+                    'case-studies': 5,
+                    'health-guidelines': 4
+                }
+            };
+
+            // Recent knowledge items
+            var aRecentKnowledgeItems = [
+                {
+                    id: "KB001",
+                    title: "Effective Remote Work Strategies for Mental Health",
+                    category: "best-practices",
+                    dateAdded: "2024-01-20",
+                    relevanceScore: 95,
+                    summary: "Comprehensive guide on maintaining mental wellness while working remotely"
+                },
+                {
+                    id: "KB002",
+                    title: "Tech Company Burnout Recovery Case Study",
+                    category: "case-studies",
+                    dateAdded: "2024-01-18",
+                    relevanceScore: 88,
+                    summary: "How a major tech company reduced burnout by 40% using AI-driven interventions"
+                },
+                {
+                    id: "KB003",
+                    title: "WHO Guidelines on Workplace Mental Health",
+                    category: "health-guidelines",
+                    dateAdded: "2024-01-15",
+                    relevanceScore: 92,
+                    summary: "Latest WHO recommendations for preventing workplace burnout"
+                },
+                {
+                    id: "KB004",
+                    title: "Microbreak Techniques for High-Stress Environments",
+                    category: "best-practices",
+                    dateAdded: "2024-01-12",
+                    relevanceScore: 85,
+                    summary: "Evidence-based short break strategies to reduce stress accumulation"
+                },
+                {
+                    id: "KB005",
+                    title: "Financial Services Wellness Program Success",
+                    category: "case-studies",
+                    dateAdded: "2024-01-10",
+                    relevanceScore: 78,
+                    summary: "Implementation of comprehensive wellness program in high-pressure environment"
+                }
+            ];
+
+            // AI-generated insights
+            var aAIInsights = [
+                {
+                    insight: "Employees with flexible work arrangements show 35% lower burnout rates according to recent case studies",
+                    confidence: 92
+                },
+                {
+                    insight: "Regular microbreaks (5-10 minutes every hour) can reduce stress levels by up to 23%",
+                    confidence: 87
+                },
+                {
+                    insight: "Teams with weekly wellness check-ins report 28% higher job satisfaction",
+                    confidence: 84
+                }
+            ];
+
+            oDashboardModel.setProperty("/knowledgeBaseStats", oKnowledgeStats);
+            oDashboardModel.setProperty("/recentKnowledgeItems", aRecentKnowledgeItems);
+            oDashboardModel.setProperty("/aiInsights", aAIInsights);
         },
 
         onViewAnalytics: function () {
@@ -668,6 +779,187 @@ sap.ui.define([
 
             MessageToast.show("Exporting detailed report for " + oEmployee.name + "...");
             // In a real implementation, this would generate a comprehensive PDF report
+        },
+
+        // Knowledge Base Methods
+        formatCategoryState: function (sCategory) {
+            switch (sCategory) {
+                case "best-practices":
+                    return "Success";
+                case "case-studies":
+                    return "Information";
+                case "health-guidelines":
+                    return "Warning";
+                default:
+                    return "None";
+            }
+        },
+
+        onAddKnowledge: function () {
+            MessageBox.confirm(
+                "Add new knowledge document to the RAG system?\n\nThis will:\n• Upload document to AI knowledge base\n• Process content for semantic search\n• Generate embeddings for similarity matching",
+                {
+                    title: "Add Knowledge Document",
+                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                    onClose: function(sAction) {
+                        if (sAction === MessageBox.Action.OK) {
+                            MessageToast.show("Knowledge upload interface would open here");
+                            // In real implementation: open file upload dialog
+                        }
+                    }
+                }
+            );
+        },
+
+        onSearchKnowledge: function () {
+            MessageBox.prompt(
+                "Enter search query for AI-powered knowledge retrieval:",
+                {
+                    title: "RAG Knowledge Search",
+                    initialValue: "",
+                    onClose: function(sAction, sValue) {
+                        if (sAction === MessageBox.Action.OK && sValue) {
+                            MessageToast.show("Searching knowledge base for: '" + sValue + "'");
+                            this._performKnowledgeSearch(sValue);
+                        }
+                    }.bind(this)
+                }
+            );
+        },
+
+        _performKnowledgeSearch: function (sQuery) {
+            // Simulate RAG search
+            setTimeout(function() {
+                MessageBox.information(
+                    "RAG Search Results for '" + sQuery + "':\n\n" +
+                    "• Found 8 relevant documents\n" +
+                    "• Semantic similarity: 87%\n" +
+                    "• Top result: 'Effective Remote Work Strategies'\n" +
+                    "• Processing time: 0.3 seconds\n\n" +
+                    "Results would be displayed in detailed view.",
+                    {
+                        title: "AI Knowledge Search Complete"
+                    }
+                );
+            }, 1000);
+        },
+
+        onRefreshKnowledge: function () {
+            MessageToast.show("Refreshing knowledge base...");
+            this._loadKnowledgeBaseData();
+
+            setTimeout(function() {
+                MessageToast.show("Knowledge base updated successfully");
+            }, 1000);
+        },
+
+        onViewKnowledgeCategory: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var sCategory = oButton.data("category");
+
+            MessageToast.show("Loading " + sCategory + " documents...");
+
+            setTimeout(function() {
+                var sCategoryName = sCategory.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase());
+                MessageBox.information(
+                    "Category: " + sCategoryName + "\n\n" +
+                    "Available documents:\n" +
+                    "• Document 1: Latest research findings\n" +
+                    "• Document 2: Implementation guidelines\n" +
+                    "• Document 3: Success metrics\n" +
+                    "• Document 4: Best practices summary\n\n" +
+                    "Full document viewer would open here.",
+                    {
+                        title: sCategoryName + " Documents"
+                    }
+                );
+            }, 800);
+        },
+
+        onKnowledgeItemPress: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("dashboard");
+            var oKnowledgeItem = oContext.getObject();
+
+            this._showKnowledgeItemDetails(oKnowledgeItem);
+        },
+
+        onViewKnowledgeItem: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("dashboard");
+            var oKnowledgeItem = oContext.getObject();
+
+            this._showKnowledgeItemDetails(oKnowledgeItem);
+        },
+
+        _showKnowledgeItemDetails: function (oKnowledgeItem) {
+            MessageBox.information(
+                "Title: " + oKnowledgeItem.title + "\n" +
+                "Category: " + oKnowledgeItem.category + "\n" +
+                "Date Added: " + oKnowledgeItem.dateAdded + "\n" +
+                "AI Relevance: " + oKnowledgeItem.relevanceScore + "%\n\n" +
+                "Summary:\n" + oKnowledgeItem.summary + "\n\n" +
+                "Full document viewer would display complete content with AI-powered insights and related recommendations.",
+                {
+                    title: "Knowledge Document Details"
+                }
+            );
+        },
+
+        onEditKnowledgeItem: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("dashboard");
+            var oKnowledgeItem = oContext.getObject();
+
+            MessageBox.confirm(
+                "Edit knowledge document: '" + oKnowledgeItem.title + "'?\n\n" +
+                "This will:\n" +
+                "• Open document editor\n" +
+                "• Update AI embeddings\n" +
+                "• Refresh semantic search index",
+                {
+                    title: "Edit Knowledge Document",
+                    onClose: function(sAction) {
+                        if (sAction === MessageBox.Action.OK) {
+                            MessageToast.show("Knowledge editor would open for: " + oKnowledgeItem.title);
+                        }
+                    }
+                }
+            );
+        },
+
+        onGenerateAIInsights: function () {
+            MessageToast.show("Generating new AI insights from knowledge base...");
+
+            var oDashboardModel = this.getView().getModel("dashboard");
+
+            // Simulate AI processing
+            setTimeout(function() {
+                var aNewInsights = [
+                    {
+                        insight: "Analysis of recent documents suggests implementing 4-day work weeks could reduce burnout by 42%",
+                        confidence: 89
+                    },
+                    {
+                        insight: "Cross-referencing case studies shows that peer support programs have 3x higher success rates",
+                        confidence: 91
+                    },
+                    {
+                        insight: "Latest health guidelines recommend personalized intervention strategies based on individual risk profiles",
+                        confidence: 86
+                    }
+                ];
+
+                oDashboardModel.setProperty("/aiInsights", aNewInsights);
+
+                MessageBox.success(
+                    "New AI insights generated successfully!\n\n" +
+                    "• Analyzed 15 documents\n" +
+                    "• Generated 3 new insights\n" +
+                    "• Average confidence: 89%\n" +
+                    "• Processing time: 2.1 seconds",
+                    {
+                        title: "RAG Analysis Complete"
+                    }
+                );
+            }, 2100);
         }
     });
 });
